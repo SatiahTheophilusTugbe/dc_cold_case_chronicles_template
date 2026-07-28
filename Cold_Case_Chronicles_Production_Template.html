@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1350px; background: #0a0a0a; font-family: 'Inter', Arial, sans-serif; }
+
+  #slide-render { position: relative; width: 1080px; height: 1350px; overflow: hidden; }
+
+  .slide {
+    display: none;
+    position: absolute; top: 0; left: 0;
+    width: 1080px; height: 1350px;
+    background: #0a0a0a;
+    color: #ffffff;
+  }
+  .slide.active { display: block; }
+
+  .bleed-red {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 0% 100%, rgba(221,21,0,0.50) 0%, rgba(221,21,0,0) 68%);
+  }
+  .bleed-gold {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 100% 0%, rgba(245,200,0,0.36) 0%, rgba(245,200,0,0) 62%);
+  }
+  .grain { position: absolute; inset: 0; filter: url(#grainFilter); opacity: 0.25; }
+
+  .slide.system-failed { background: #f5c800; color: #0a0a0a; }
+  .slide.system-failed .bleed-red,
+  .slide.system-failed .bleed-gold { display: none; }
+  .slide.system-failed .grain { opacity: 0.12; }
+
+  /* CASE BADGE -- redesigned: horizontal, unrotated, eyebrow-style, top-right, prominent */
+  .case-badge {
+    position: absolute; top: 78px; right: 80px;
+    text-align: right;
+  }
+  .case-badge .line1 { font-size: 27px; font-weight: 800; letter-spacing: 2px; color: #dd1500; }
+  .case-badge .line2 { font-size: 22px; font-weight: 700; letter-spacing: 3px; color: #dd1500; opacity: 0.85; margin-top: 4px; }
+  .slide.system-failed .case-badge .line1,
+  .slide.system-failed .case-badge .line2 { color: #0a0a0a; opacity: 1; }
+
+  .ghost-num {
+    position: absolute; bottom: 54px; right: 65px;
+    font-family: Arial, sans-serif;
+    font-size: 280px; font-weight: 900; letter-spacing: -6px;
+    color: #ffffff; opacity: 0.04;
+  }
+  .slide.system-failed .ghost-num { color: #0a0a0a; opacity: 0.04; }
+
+  .footer-tagline {
+    position: absolute; bottom: 43px; left: 0; right: 0;
+    text-align: center;
+    font-size: 20px; font-style: italic; letter-spacing: 4px;
+    color: #f5c800; opacity: 0.9;
+  }
+  .slide.system-failed .footer-tagline { color: #0a0a0a; }
+
+  .eyebrow-red { position: absolute; left: 80px; top: 90px; font-size: 29px; font-weight: 700; letter-spacing: 4px; color: #dd1500; }
+  .eyebrow-gold { position: absolute; left: 80px; top: 90px; font-size: 29px; font-weight: 700; letter-spacing: 4px; color: #f5c800; }
+  .slide.system-failed .eyebrow-red,
+  .slide.system-failed .eyebrow-gold { color: #0a0a0a; }
+
+  /* ---- NEW Slide 1: THE VICTIM -- cold open on the person, portrait is the hero ---- */
+  .portrait {
+    position: absolute; left: 50%; top: 380px;
+    width: 480px; height: 480px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%; border: 4px solid #444;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; letter-spacing: 3px; color: #666;
+    background: rgba(255,255,255,0.02);
+  }
+  .victim-name { position: absolute; top: 680px; left: 0; right: 0; text-align: center; font-size: 62px; font-weight: 900; color: #ffffff; }
+  .victim-rule { position: absolute; top: 758px; left: 50%; transform: translateX(-50%); width: 100px; height: 4px; background: #f5c800; }
+  .victim-body { position: absolute; top: 830px; left: 0; right: 0; text-align: center; }
+  .victim-body p { font-size: 36px; font-weight: 400; color: #cccccc; line-height: 1.7; }
+
+  /* ---- NEW Slide 2: THE FILE -- the title card drops after we've met her ---- */
+  .cover-pretag { position: absolute; top: 200px; left: 80px; font-size: 24px; font-weight: 600; letter-spacing: 6px; color: #999999; }
+  .cover-pretag-rule { position: absolute; top: 242px; left: 80px; width: 60px; height: 2px; background: #dd1500; opacity: 0.7; }
+  .cover-logline { position: absolute; top: 340px; left: 80px; right: 100px; }
+  .cover-logline p { font-size: 40px; font-weight: 700; color: #e8e0d5; line-height: 1.5; }
+  .cover-eyebrow { position: absolute; top: 1020px; left: 80px; font-size: 29px; letter-spacing: 4px; font-weight: 600; color: #999999; }
+  .cover-kicker { position: absolute; top: 1068px; left: 78px; font-size: 76px; font-weight: 900; letter-spacing: 1px; color: #ffffff; }
+  .cover-name { position: absolute; top: 1152px; left: 78px; font-size: 76px; font-weight: 900; letter-spacing: 1px; color: #dd1500; }
+  .cover-rule { position: absolute; top: 1240px; left: 80px; width: 130px; height: 5px; background: #f5c800; }
+
+  /* ---- Slide 3: Crime timeline ---- */
+  .tl-spine { position: absolute; left: 80px; top: 260px; width: 3px; height: 820px; background: #333; }
+  .tl-dot { position: absolute; left: 80px; width: 16px; height: 16px; transform: translate(-50%,-50%); border-radius: 50%; background: #dd1500; }
+  .tl-date { position: absolute; left: 115px; font-size: 26px; letter-spacing: 1px; color: #999999; }
+  .tl-fact { position: absolute; left: 115px; right: 80px; font-size: 34px; font-weight: 600; color: #ffffff; line-height: 1.3; }
+
+  /* ---- Slide 4: Investigation / System Failed ---- */
+  .inv-body { position: absolute; top: 300px; left: 80px; right: 80px; bottom: 260px; display: flex; flex-direction: column; justify-content: space-evenly; }
+  .inv-body p { font-size: 38px; font-weight: 500; line-height: 1.4; }
+  .slide.system-failed .inv-body p { font-weight: 700; }
+
+  /* ---- Slide 5: Unresolved ---- */
+  .unres-body { position: absolute; top: 280px; left: 80px; right: 80px; }
+  .unres-body p { font-size: 35px; font-weight: 500; color: #ffffff; line-height: 1.55; margin-bottom: 10px; }
+  .unres-emph { position: absolute; top: 780px; left: 80px; right: 80px; }
+  .unres-emph p { font-size: 44px; font-weight: 900; color: #f5c800; line-height: 1.4; }
+
+  /* ---- Slide 6: Close ---- */
+  .close-file { position: absolute; top: 380px; left: 0; right: 0; text-align: center; font-size: 48px; font-weight: 900; letter-spacing: 1px; color: #ffffff; }
+  .close-continued { position: absolute; top: 434px; left: 0; right: 0; text-align: center; font-size: 26px; letter-spacing: 3px; color: #999999; }
+  .close-rule { position: absolute; top: 490px; left: 50%; transform: translateX(-50%); width: 200px; height: 3px; background: #f5c800; }
+  .close-somber { position: absolute; top: 620px; left: 80px; right: 80px; text-align: center; }
+  .close-somber p { font-size: 42px; font-weight: 800; color: #ffffff; line-height: 1.5; }
+  .close-platforms-wrap { position: absolute; top: 1140px; left: 0; right: 0; text-align: center; }
+  .close-platforms { font-size: 27px; font-weight: 600; letter-spacing: 3px; color: #cccccc; }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+  <filter id="grainFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch" result="noise"/>
+    <feColorMatrix in="noise" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.035 0"/>
+  </filter>
+</svg>
+  <div id="slide-render">
+
+    <!-- SLIDE 1 (was slide 2) -- THE VICTIM, cold open on the person -->
+    <div class="slide {{S1_ACTIVE}}">
+      <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="ghost-num">01</div>
+      <div class="case-badge"><div class="line1">CASE FILE No. {{CASE_NUMBER}}</div><div class="line2">STATUS: {{CASE_STATUS}}</div></div>
+      <div class="eyebrow-gold">{{VICTIM_EYEBROW}}</div>
+      <div class="portrait">PORTRAIT</div>
+      <div class="victim-name">{{VICTIM_NAME_AGE}}</div>
+      <div class="victim-rule"></div>
+      <div class="victim-body"><p>{{VICTIM_BODY_1}}</p><p>{{VICTIM_BODY_2}}</p><p>{{VICTIM_BODY_3}}</p></div>
+      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+    </div>
+
+    <!-- SLIDE 2 (was slide 1) -- THE FILE, the title card drops -->
+    <div class="slide {{S2_ACTIVE}}">
+      <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="ghost-num">02</div>
+      <div class="case-badge"><div class="line1">CASE FILE No. {{CASE_NUMBER}}</div><div class="line2">STATUS: {{CASE_STATUS}}</div></div>
+      <div class="cover-pretag">A DARKEST CRIMES INVESTIGATION</div>
+      <div class="cover-pretag-rule"></div>
+      <div class="cover-logline"><p>{{COVER_LOGLINE}}</p></div>
+      <div class="cover-eyebrow">{{LOCATION_YEAR}}</div>
+      <div class="cover-kicker">{{COVER_KICKER}}</div>
+      <div class="cover-name">{{COVER_NAME}}</div>
+      <div class="cover-rule"></div>
+      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide {{S3_ACTIVE}}">
+      <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="ghost-num">03</div>
+      <div class="case-badge"><div class="line1">CASE FILE No. {{CASE_NUMBER}}</div><div class="line2">STATUS: {{CASE_STATUS}}</div></div>
+      <div class="eyebrow-red">WHAT HAPPENED</div>
+      <div class="tl-spine"></div>
+      <div class="tl-dot" style="top:280px;"></div>
+      <div class="tl-date" style="top:258px;">{{CRIME_DATE_1}}</div>
+      <div class="tl-fact" style="top:298px;">{{CRIME_FACT_1}}</div>
+      <div class="tl-dot" style="top:560px;"></div>
+      <div class="tl-date" style="top:538px;">{{CRIME_DATE_2}}</div>
+      <div class="tl-fact" style="top:578px;">{{CRIME_FACT_2}}</div>
+      <div class="tl-dot" style="top:900px;"></div>
+      <div class="tl-date" style="top:878px;">{{CRIME_DATE_3}}</div>
+      <div class="tl-fact" style="top:918px;">{{CRIME_FACT_3}}</div>
+      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide {{S4_ACTIVE}} {{SYSTEM_FAILED_CLASS}}">
+      <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="ghost-num">04</div>
+      <div class="case-badge"><div class="line1">CASE FILE No. {{CASE_NUMBER}}</div><div class="line2">STATUS: {{CASE_STATUS}}</div></div>
+      <div class="eyebrow-gold">{{INVESTIGATION_LABEL}}</div>
+      <div class="inv-body"><p>{{INVESTIGATION_BODY_1}}</p><p>{{INVESTIGATION_BODY_2}}</p><p>{{INVESTIGATION_BODY_3}}</p><p>{{INVESTIGATION_BODY_4}}</p></div>
+      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide {{S5_ACTIVE}}">
+      <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="ghost-num">05</div>
+      <div class="case-badge"><div class="line1">CASE FILE No. {{CASE_NUMBER}}</div><div class="line2">STATUS: {{CASE_STATUS}}</div></div>
+      <div class="eyebrow-red">UNRESOLVED</div>
+      <div class="unres-body"><p>{{UNRESOLVED_BODY_1}}</p><p>{{UNRESOLVED_BODY_2}}</p><p>{{UNRESOLVED_BODY_3}}</p></div>
+      <div class="unres-emph"><p>{{UNRESOLVED_EMPHASIS_1}}</p><p>{{UNRESOLVED_EMPHASIS_2}}</p></div>
+      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+    </div>
+
+    <!-- SLIDE 6 -->
+    <div class="slide {{S6_ACTIVE}}">
+      <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="ghost-num">06</div>
+      <div class="close-file">CASE FILE No. {{CASE_NUMBER}}</div>
+      <div class="close-continued">CONTINUED</div>
+      <div class="close-rule"></div>
+      <div class="close-somber"><p>{{CLOSE_SOMBER_1}}</p><p>{{CLOSE_SOMBER_2}}</p></div>
+      <div class="close-platforms-wrap">
+        <div class="close-platforms">FB &nbsp;&middot;&nbsp; IG &nbsp;&middot;&nbsp; YT &nbsp;&middot;&nbsp; X &nbsp;&middot;&nbsp; THREADS &nbsp;&middot;&nbsp; TIKTOK</div>
+      </div>
+      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+    </div>
+
+  </div>
+</body>
+</html>
