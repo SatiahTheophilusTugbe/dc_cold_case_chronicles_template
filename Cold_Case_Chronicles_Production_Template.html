@@ -23,13 +23,13 @@
 
   /* ---- Shared: exhibit tag (case number + status), replaces the old two-line color badge ---- */
   .tag-stamp {
-    position: absolute; top: 64px; right: 64px;
-    border: 1.5px solid #9c1c1c; padding: 10px 18px;
+    position: absolute; top: 60px; right: 60px;
+    border: 2px solid #9c1c1c; padding: 13px 22px;
     text-align: right;
     transform: rotate(1.4deg);
   }
-  .tag-stamp .tnum { font-family: 'IBM Plex Mono', monospace; font-size: 19px; letter-spacing: 0.05em; color: #c94b4b; }
-  .tag-stamp .tstatus { font-family: 'IBM Plex Mono', monospace; font-size: 14px; letter-spacing: 0.14em; color: #746a5f; margin-top: 4px; }
+  .tag-stamp .tnum { font-family: 'IBM Plex Mono', monospace; font-size: 24px; letter-spacing: 0.03em; color: #c94b4b; white-space: nowrap; }
+  .tag-stamp .tstatus { font-family: 'IBM Plex Mono', monospace; font-size: 16px; letter-spacing: 0.12em; color: #746a5f; margin-top: 5px; }
 
   .ghost-num {
     position: absolute; bottom: 50px; right: 60px;
@@ -39,8 +39,8 @@
   }
 
   .footer-tagline {
-    position: absolute; bottom: 50px; left: 72px;
-    text-align: left;
+    position: absolute; bottom: 50px; left: 0; right: 0;
+    text-align: center;
     font-size: 18px; font-style: italic; letter-spacing: 3px;
     color: #9c1c1c; opacity: 0.75;
   }
@@ -65,7 +65,8 @@
   .slide.has-photo .hero-photo,
   .slide.has-photo .hero-scrim { display: block; }
 
-  .hook-band { position: absolute; left: 72px; right: 72px; bottom: 110px; }
+  .hook-band { position: absolute; left: 72px; right: 72px; top: 50%; transform: translateY(-50%); }
+  .slide.has-photo .hook-band { top: auto; bottom: 110px; transform: none; }
   .hook-line {
     font-family: 'Fraunces', serif; font-weight: 900; font-style: italic;
     font-size: 66px; line-height: 1.1; color: #ffffff;
@@ -105,8 +106,12 @@
   .unres-emph p { font-family: 'Fraunces', serif; font-weight: 900; font-size: 46px; line-height: 1.28; color: #c94b4b; margin-bottom: 6px; }
   .close-somber { position: absolute; top: 775px; left: 72px; right: 96px; }
   .close-somber p { font-family: 'IBM Plex Sans', sans-serif; font-size: 34px; font-weight: 600; color: #f3ede4; line-height: 1.5; margin-bottom: 8px; }
-  .platforms-wrap { position: absolute; top: 1160px; left: 0; right: 0; text-align: center; }
-  .platforms { font-family: 'IBM Plex Mono', monospace; font-size: 22px; font-weight: 500; letter-spacing: 0.14em; color: #746a5f; }
+  .footer-row {
+    position: absolute; bottom: 50px; left: 72px; right: 64px;
+    display: flex; align-items: baseline; justify-content: space-between;
+  }
+  .footer-row .footer-tagline { position: static; text-align: left; }
+  .platforms { font-family: 'IBM Plex Mono', monospace; font-size: 17px; font-weight: 500; letter-spacing: 0.06em; color: #746a5f; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -185,10 +190,10 @@
         <p>{{CLOSE_SOMBER_1}}</p>
         <p>{{CLOSE_SOMBER_2}}</p>
       </div>
-      <div class="platforms-wrap">
-        <div class="platforms">FB &nbsp;&middot;&nbsp; IG &nbsp;&middot;&nbsp; YT &nbsp;&middot;&nbsp; X &nbsp;&middot;&nbsp; THREADS &nbsp;&middot;&nbsp; TIKTOK</div>
+      <div class="footer-row">
+        <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
+        <div class="platforms">FB &middot; IG &middot; YT &middot; X &middot; THREADS &middot; TIKTOK</div>
       </div>
-      <div class="footer-tagline">TRUTH LIVES IN THE SHADOWS</div>
     </div>
 
   </div>
