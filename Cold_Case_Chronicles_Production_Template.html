@@ -21,6 +21,14 @@
 
   .grain { position: absolute; inset: 0; filter: url(#grainFilter); opacity: 0.22; }
 
+  /* ---- Shared: left-edge progress rail -- fills in as the carousel advances ---- */
+  .progress-rail {
+    position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .progress-seg { width: 6px; height: 54px; background: rgba(243,237,228,0.10); }
+  .progress-seg.filled { background: #9c1c1c; }
+
   /* ---- Shared: exhibit tag (case number + status), replaces the old two-line color badge ---- */
   .tag-stamp {
     position: absolute; top: 60px; right: 60px;
@@ -127,6 +135,12 @@
     <div class="slide {{S1_ACTIVE}} {{HERO_PHOTO_CLASS}}">
       <div class="grain"></div>
       <div class="hero-photo" style="background-image:url('{{HERO_IMAGE_URL}}')"></div><div class="hero-scrim"></div>
+      <div class="progress-rail">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg"></div>
+        <div class="progress-seg"></div>
+        <div class="progress-seg"></div>
+      </div>
       <div class="ghost-num">01</div>
       <div class="tag-stamp"><div class="tnum">{{CASE_NUMBER}}</div><div class="tstatus">{{CASE_STATUS}}</div></div>
       <div class="hook-band">
@@ -140,6 +154,12 @@
     <!-- SLIDE 2 -- THE CASE: title card + logline + timeline -->
     <div class="slide {{S2_ACTIVE}}">
       <div class="grain"></div>
+      <div class="progress-rail">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg"></div>
+        <div class="progress-seg"></div>
+      </div>
       <div class="ghost-num">02</div>
       <div class="tag-stamp"><div class="tnum">{{CASE_NUMBER}}</div><div class="tstatus">{{CASE_STATUS}}</div></div>
       <div class="eyebrow">A Darkest Crimes Investigation</div>
@@ -159,6 +179,12 @@
     <!-- SLIDE 3 -- THE INVESTIGATION -->
     <div class="slide {{S3_ACTIVE}} {{SYSTEM_FAILED_CLASS}}">
       <div class="grain"></div>
+      <div class="progress-rail">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg"></div>
+      </div>
       <div class="ghost-num">03</div>
       <div class="tag-stamp"><div class="tnum">{{CASE_NUMBER}}</div><div class="tstatus">{{CASE_STATUS}}</div></div>
       <div class="eyebrow">{{INVESTIGATION_LABEL}}</div>
@@ -174,6 +200,12 @@
     <!-- SLIDE 4 -- UNRESOLVED / CLOSE -->
     <div class="slide {{S4_ACTIVE}}">
       <div class="grain"></div>
+      <div class="progress-rail">
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+        <div class="progress-seg filled"></div>
+      </div>
       <div class="ghost-num">04</div>
       <div class="tag-stamp"><div class="tnum">{{CASE_NUMBER}}</div><div class="tstatus">{{CASE_STATUS}}</div></div>
       <div class="eyebrow">Unresolved</div>
