@@ -80,6 +80,23 @@
   .victim-body { position: absolute; top: 830px; left: 0; right: 0; text-align: center; }
   .victim-body p { font-size: 36px; font-weight: 400; color: #cccccc; line-height: 1.7; }
 
+  /* ---- Hero photo treatment for Slide 1 -- full-bleed when a real photo is approved ---- */
+  .hero-photo {
+    position: absolute; inset: 0;
+    background-size: cover; background-position: center;
+    display: none;
+  }
+  .hero-photo-scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.15) 0%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,0.96) 100%);
+    display: none;
+  }
+  .slide.has-photo .hero-photo,
+  .slide.has-photo .hero-photo-scrim { display: block; }
+  .slide.has-photo .portrait { display: none; }
+  .slide.has-photo .bleed-red,
+  .slide.has-photo .bleed-gold { display: none; }
+
   /* ---- NEW Slide 2: THE FILE -- the title card drops after we've met her ---- */
   .cover-pretag { position: absolute; top: 200px; left: 80px; font-size: 24px; font-weight: 600; letter-spacing: 6px; color: #999999; }
   .cover-pretag-rule { position: absolute; top: 242px; left: 80px; width: 60px; height: 2px; background: #dd1500; opacity: 0.7; }
@@ -127,8 +144,9 @@
   <div id="slide-render">
 
     <!-- SLIDE 1 (was slide 2) -- THE VICTIM, cold open on the person -->
-    <div class="slide {{S1_ACTIVE}}">
+    <div class="slide {{S1_ACTIVE}} {{HERO_PHOTO_CLASS}}">
       <div class="bleed-red"></div><div class="bleed-gold"></div><div class="grain"></div>
+      <div class="hero-photo" style="background-image:url('{{HERO_IMAGE_URL}}')"></div><div class="hero-photo-scrim"></div>
       <div class="ghost-num">01</div>
       <div class="case-badge"><div class="line1">CASE FILE No. {{CASE_NUMBER}}</div><div class="line2">STATUS: {{CASE_STATUS}}</div></div>
       <div class="eyebrow-gold">{{VICTIM_EYEBROW}}</div>
